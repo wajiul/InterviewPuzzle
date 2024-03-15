@@ -1,24 +1,24 @@
 ﻿namespace InterviewPuzzle.Exceptions
 {
-    public class DomainNotFoundException : Exception
+    public class NotFoundException : Exception
     {
-        public DomainNotFoundException(string message) : base(message)
+        public NotFoundException(string message) : base(message)
         {
 
         }
     }
 
-    public class DomainAlreadyExistException : Exception
+    public class AlreadyExistException : Exception
     {
-        public DomainAlreadyExistException(string message) : base(message)
+        public AlreadyExistException(string message) : base(message)
         {
 
         }
     }
 
-    public class DomainNotExistException : Exception
+    public class NotExistException : Exception
     {
-        public DomainNotExistException(string message) : base(message)
+        public NotExistException(string message) : base(message)
         {
 
         }

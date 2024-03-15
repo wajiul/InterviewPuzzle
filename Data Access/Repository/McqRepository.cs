@@ -1,5 +1,6 @@
 ﻿using InterviewPuzzle.Data_Access.Context;
 using InterviewPuzzle.Data_Access.Model;
+using InterviewPuzzle.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterviewPuzzle.Data_Access.Repository
@@ -27,15 +28,29 @@ namespace InterviewPuzzle.Data_Access.Repository
             return await _context.mcqs.Include(m => m.Options).FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public void DeleteMcq(int id)
+        public async Task DeleteMcq(int id)
         {
-            var mcq = _context.mcqs.Find(id);
+            var mcq = await _context.mcqs.FindAsync(id);
             if (mcq == null)
-                return;
+                throw new NotFoundException("Mcq not found");
 
             _context.Remove(mcq);
         }
 
+        public async Task DeleteMcqOption(int mcqId, int optionId)
+        {
+            var mcq = await _context.mcqs.FindAsync(mcqId);
+            if (mcq == null)
+                throw new NotFoundException("Mcq not found");
+
+            var optionToRemove = mcq.Options.FirstOrDefault(o => o.Id == optionId);
+
+            if (optionToRemove != null)
+            {
+                _context.options.Remove(optionToRemove);
+            }
+        }
+        
         public async Task<MCQ> FindMcqAsync(int id)
         {
             return await _context.mcqs.FindAsync(id);
@@ -44,6 +59,14 @@ namespace InterviewPuzzle.Data_Access.Repository
         public void UpdateMcq(MCQ mcq)
         {
             _context.mcqs.Update(mcq);
+        }
+        
+        public async Task<bool> IsMcqExist(string course, string question)
+        {
+            var result = await _context.mcqs.FirstOrDefaultAsync(m => m.CourseName.ToLower() ==  course.ToLower() && m.Question.ToLower() == question.ToLower());
+            if(result == null)
+                return false;
+            return true;
         }
     }
 }

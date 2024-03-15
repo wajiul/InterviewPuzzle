@@ -20,11 +20,11 @@ namespace InterviewPuzzle.Middlewares
                 await next(context);
             }
 
-            catch (DomainNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 await ResponseToExceptionAsync(context, ex.Message, StatusCodes.Status404NotFound);
             }
-            catch (DomainAlreadyExistException ex)
+            catch (AlreadyExistException ex)
             {
                 await ResponseToExceptionAsync(context, ex.Message, StatusCodes.Status400BadRequest);
             }

@@ -1,6 +1,10 @@
-﻿using InterviewPuzzle.Data_Access.Context;
+﻿using AutoMapper;
+using InterviewPuzzle.Controllers.DTO;
+using InterviewPuzzle.Data_Access;
+using InterviewPuzzle.Data_Access.Context;
 using InterviewPuzzle.Data_Access.Model;
 using InterviewPuzzle.Data_Access.Repository;
+using InterviewPuzzle.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +16,27 @@ namespace InterviewPuzzle.Controllers
     {
         private readonly InterviewPuzzleDbContext _context;
         private readonly McqRepository _mcqRepository;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _uow;
 
-        public McqsController(InterviewPuzzleDbContext context, McqRepository mcqRepository)
+        public McqsController(InterviewPuzzleDbContext context, McqRepository mcqRepository, IMapper mapper, IUnitOfWork uow)
         {
             _context = context;
             _mcqRepository = mcqRepository;
+            _mapper = mapper;
+            _uow = uow;
         }
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] MCQ mcq)
+        public async Task<IActionResult> Add([FromBody] McqDto mcqDto)
         {
+            if (await _mcqRepository.IsMcqExist(mcqDto.CourseName, mcqDto.Question))
+               throw new AlreadyExistException("Mcq already exist");
+
+            var mcq = _mapper.Map<McqDto, MCQ>(mcqDto);
+
             _mcqRepository.AddMCQ(mcq);
-            await _context.SaveChangesAsync();
+
+            await _uow.Complete();
             return Ok("Mcq added");
         }
 
@@ -42,19 +56,16 @@ namespace InterviewPuzzle.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            _mcqRepository.DeleteMcq(id);
-            await _context.SaveChangesAsync();
+            await _mcqRepository.DeleteMcq(id);
+            await _uow.Complete();
             return Ok("Deleted successfully.");
         }
+
         [HttpDelete("mcq/{mcqId}/option/{optionId}")]
         public async Task<IActionResult> DeleteOption(int mcqId, int optionId)
         {
-            var optionToRemove = _context.options.Find(optionId);
-            if(optionToRemove != null)
-            {
-                _context.options.Remove(optionToRemove);
-            }
-            await _context.SaveChangesAsync();
+           await _mcqRepository.DeleteMcqOption(mcqId, optionId);
+           await _uow.Complete();
             return Ok($"Option {optionId} Removed from Mcq {mcqId}");
         }
 
@@ -62,7 +73,7 @@ namespace InterviewPuzzle.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] MCQ mcq)
         {
             _mcqRepository.UpdateMcq(mcq);
-            await _context.SaveChangesAsync();
+            await _uow.Complete();
             return Ok("Data updated successfully");
         }
 
