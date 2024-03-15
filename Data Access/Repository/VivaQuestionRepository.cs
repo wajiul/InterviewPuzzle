@@ -37,9 +37,9 @@ namespace InterviewPuzzle.Data_Access.Repository
             _context.vivaQuestions.Remove(question);
         }
 
-        public async Task<bool> isQuestionExist(VivaQuestion question)
+        public async Task<bool> isQuestionExist(string course, string question)
         {
-           var result =  await _context.vivaQuestions.FirstOrDefaultAsync(q => q.Text == question.Text);
+           var result =  await _context.vivaQuestions.FirstOrDefaultAsync(q => q.CourseName == course && q.Text == question);
             return result != null;
         }
 

@@ -20,6 +20,7 @@ builder.Services.AddDbContext<InterviewPuzzleDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<McqRepository, McqRepository>();
 builder.Services.AddScoped<VivaQuestionRepository, VivaQuestionRepository>();
+builder.Services.AddScoped<CodingQuestionRepository, CodingQuestionRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

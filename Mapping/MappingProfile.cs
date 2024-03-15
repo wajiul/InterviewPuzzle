@@ -10,6 +10,9 @@ namespace InterviewPuzzle.Mapping
         {
             CreateMap<McqDto, MCQ>();
             CreateMap<VivaQuestionDto, VivaQuestion>();
+            CreateMap<SolutionDto, Solution>();
+            CreateMap<CodingQuestionDto, CodingQuestion>();
+
         }
     }
 }

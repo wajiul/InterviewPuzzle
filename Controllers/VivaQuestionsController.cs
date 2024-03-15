@@ -48,11 +48,11 @@ namespace InterviewPuzzle.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] VivaQuestionDto questionDto)
         {
-            var question = _mapper.Map<VivaQuestionDto, VivaQuestion>(questionDto)
-                ;
-            var exist = await _questionRepository.isQuestionExist(question);
+            var exist = await _questionRepository.isQuestionExist(questionDto.CourseName, questionDto.Text);
             if (exist)
                 throw new AlreadyExistException("Question already exist");
+
+            var question = _mapper.Map<VivaQuestionDto, VivaQuestion>(questionDto);
 
             _questionRepository.AddVavaQuestion(question);
             await _uow.Complete();

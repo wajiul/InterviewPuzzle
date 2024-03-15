@@ -51,6 +51,10 @@ namespace InterviewPuzzle.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var mcq = await _mcqRepository.GetMcqAsync(id);
+            if (mcq == null)
+            {
+                throw new NotFoundException($"MCQ question with Id {id} not found");
+            }
             return Ok(mcq);
         }
         [HttpDelete("{id}")]
