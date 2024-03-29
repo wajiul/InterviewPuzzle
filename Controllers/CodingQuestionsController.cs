@@ -8,10 +8,11 @@ using InterviewPuzzle.Controllers.DTO;
 using InterviewPuzzle.Exceptions;
 using InterviewPuzzle.Data_Access.Model;
 using AutoMapper.Configuration.Conventions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InterviewPuzzle.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/coding")]
     [ApiController]
     public class CodingQuestionsController : ControllerBase
     {
@@ -45,52 +46,16 @@ namespace InterviewPuzzle.Controllers
             return Ok(question);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(CodingQuestionDto questionDto)
+        [HttpGet("bytag")]
+        public async Task<IActionResult> GetQuestionByTag([FromQuery] string tag)
         {
-            var exist = await _questionRepository.IsQuestionExist(questionDto.Text);
-            if (exist)
-                throw new AlreadyExistException("Coding question already exist");
-
-            var question = _mapper.Map<CodingQuestionDto, CodingQuestion>(questionDto);
-
-            _questionRepository.Add(question);
-            await _uow.Complete();
-            return CreatedAtAction("Get", new { id = question.Id }, question);
+            var questions = await _questionRepository.GetCodingQuestionsByTagAsync(tag);
+            if(questions == null || questions.Count == 0)
+            {
+                throw new NotFoundException($"Coding question with tag '{tag}' not found");
+            }
+            return Ok(questions);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CodingQuestionDto questionDto)
-        {
-            var question = await _questionRepository.GetCodingQuestionAsync(id);
-            if (question == null)
-                throw new NotFoundException($"Coding question with Id {id} not found.");
-            var newQuestion = _mapper.Map<CodingQuestionDto, CodingQuestion>(questionDto, question);
-
-            _questionRepository.UpdateCodingQuestion(newQuestion);
-            await _uow.Complete();
-            return Ok("Updated Successfully");
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var question = await _questionRepository.GetCodingQuestionAsync(id);
-            if (question == null)
-                throw new NotFoundException($"Coding question with Id {id} not found.");
-            _questionRepository.DeleteCodingQuestion(question);
-            await _uow.Complete();
-            return Ok("Deleted Successfully.");
-        }
-
-        [HttpDelete("codingQuestions/{questionId}/solution/{solutionId}")]
-        public async Task<IActionResult> DeleteOption(int questionId, int solutionId)
-        {
-            await _questionRepository.DeleteSolution(questionId, solutionId);
-            await _uow.Complete();
-            return Ok($"Solution Id {solutionId} Removed from  Question {questionId}");
-        }
-
 
     }
 }

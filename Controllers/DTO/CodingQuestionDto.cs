@@ -13,6 +13,9 @@ namespace InterviewPuzzle.Controllers.DTO
         [StringLength(200)]
         public string Text { get; set; } = string.Empty;
         [Required]
+        [StringLength(50)]
+        public string Tag { get; set; } = string.Empty;
+        [Required]
         public List<SolutionDto> Solutions { get; set; }
     }
 }

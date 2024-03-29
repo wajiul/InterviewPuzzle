@@ -6,7 +6,7 @@ namespace InterviewPuzzle.Controllers.DTO
     {
         [Required]
         [StringLength(50)]
-        public string CourseName { get; set; } = string.Empty;
+        public string Coursename { get; set; } = string.Empty;
         [Required]
         [StringLength(200)]
         public string Text { get; set; } = string.Empty;

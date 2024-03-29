@@ -10,7 +10,7 @@ using InterviewPuzzle.Controllers.DTO;
 
 namespace InterviewPuzzle.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/interviews")]
     [ApiController]
     public class VivaQuestionsController : ControllerBase
     {
@@ -44,44 +44,15 @@ namespace InterviewPuzzle.Controllers
             }
             return Ok(question);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] VivaQuestionDto questionDto)
+        [HttpGet("bycourse")]
+        public async Task<IActionResult> GetQuestionsByCourse([FromQuery] string course)
         {
-            var exist = await _questionRepository.isQuestionExist(questionDto.CourseName, questionDto.Text);
-            if (exist)
-                throw new AlreadyExistException("Question already exist");
-
-            var question = _mapper.Map<VivaQuestionDto, VivaQuestion>(questionDto);
-
-            _questionRepository.AddVavaQuestion(question);
-            await _uow.Complete();
-            return CreatedAtAction("Get", new { id = question.Id }, question);
+            var questions = await _questionRepository.GetQuestionByCourseAsync(course);
+            if (questions == null || questions.Count == 0)
+            {
+                throw new NotFoundException($"Viva questions with course '{course}' not found");
+            }
+            return Ok(questions);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] VivaQuestionDto questionDto)
-        {
-            var question = await _questionRepository.GetVivaQuestionAsync(id);
-            if (question == null)
-                throw new NotFoundException($"Viva question with Id {id} not found.");
-            var newQuestion = _mapper.Map<VivaQuestionDto, VivaQuestion>(questionDto, question);
-
-            _questionRepository.UpdateVivaQuestion(newQuestion);
-            await _uow.Complete();
-            return Ok("Updated Successfully");
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var question = await _questionRepository.GetVivaQuestionAsync(id);
-            if (question == null)
-                throw new NotFoundException($"Viva question with Id {id} not found.");
-            _questionRepository.DeleteVivaQuestion(question);
-            await _uow.Complete();
-            return Ok("Deleted Successfully."); 
-        }
-
     }
 }

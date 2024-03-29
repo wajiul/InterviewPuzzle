@@ -23,7 +23,11 @@ namespace InterviewPuzzle.Data_Access.Repository
             var question = await _context.vivaQuestions.FirstOrDefaultAsync(x => x.Id == id);
             return question;
         }
-        
+        public async Task<List<VivaQuestion>> GetQuestionByCourseAsync(string course)
+        {
+            return await _context.vivaQuestions.Where(q => q.CourseName.ToLower() ==  course.ToLower()).ToListAsync();
+        }
+
         public void AddVavaQuestion(VivaQuestion question)
         {
             _context.vivaQuestions.Add(question);

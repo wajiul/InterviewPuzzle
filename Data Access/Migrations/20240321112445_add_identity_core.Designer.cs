@@ -4,6 +4,7 @@ using InterviewPuzzle.Data_Access.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewPuzzle.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewPuzzleDbContext))]
-    partial class InterviewPuzzleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240321112445_add_identity_core")]
+    partial class addidentitycore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

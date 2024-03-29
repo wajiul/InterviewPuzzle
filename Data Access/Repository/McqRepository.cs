@@ -27,7 +27,10 @@ namespace InterviewPuzzle.Data_Access.Repository
         {
             return await _context.mcqs.Include(m => m.Options).FirstOrDefaultAsync(m => m.Id == id);
         }
-
+        public async Task<List<MCQ>> GetMcqByCourseAsync(string course)
+        {
+            return await _context.mcqs.Include(q => q.Options).Where(q => q.CourseName.ToLower() ==  course.ToLower()).ToListAsync();
+        }
         public async Task DeleteMcq(int id)
         {
             var mcq = await _context.mcqs.FindAsync(id);

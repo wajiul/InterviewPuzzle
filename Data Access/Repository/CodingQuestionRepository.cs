@@ -22,6 +22,10 @@ namespace InterviewPuzzle.Data_Access.Repository
         {
             return await _context.codingQuestions.Include(q => q.Solutions).FirstOrDefaultAsync(q => q.Id == id);
         }
+        public async Task<List<CodingQuestion>> GetCodingQuestionsByTagAsync(string tag)
+        {
+            return await _context.codingQuestions.Include(q => q.Solutions).Where(q => q.Tag.ToLower() == tag.ToLower()).ToListAsync();
+        }
 
         public void Add(CodingQuestion codingQuestion)
         {

@@ -9,6 +9,7 @@ namespace InterviewPuzzle.Mapping
         public MappingProfile() 
         {
             CreateMap<McqDto, MCQ>();
+            CreateMap<OptionDto, Option>();
             CreateMap<VivaQuestionDto, VivaQuestion>();
             CreateMap<SolutionDto, Solution>();
             CreateMap<CodingQuestionDto, CodingQuestion>();
