@@ -16,7 +16,7 @@ namespace InterviewPuzzle.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpPost("login")]
+        [HttpPost("login")] 
         public async Task<IActionResult> Login([FromBody] Login login)
         {
             var token = await _accountRepository.LoginAsync(login);
@@ -27,12 +27,14 @@ namespace InterviewPuzzle.Controllers
             return Ok(new {Token = token});
         }
 
-        [HttpPost("register")]
+        [HttpPost("register")] 
         public async Task<IActionResult> Register([FromBody] Register register)
         {
             var result = await _accountRepository.CreatUserAsync(register);
             return Ok(result);
         }
+
+
 
     }
 }

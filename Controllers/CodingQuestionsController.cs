@@ -49,7 +49,7 @@ namespace InterviewPuzzle.Controllers
         [HttpGet("bytag")]
         public async Task<IActionResult> GetQuestionByTag([FromQuery] string tag)
         {
-            var questions = await _questionRepository.GetCodingQuestionsByTagAsync(tag);
+            var questions = await _questionRepository.GetCodingQuestionsByTagAsync(tag.ToLower());
             if(questions == null || questions.Count == 0)
             {
                 throw new NotFoundException($"Coding question with tag '{tag}' not found");

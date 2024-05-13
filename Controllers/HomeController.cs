@@ -15,6 +15,7 @@ namespace InterviewPuzzle.Controllers
             _repository = repository;
         }
         [HttpGet]
+        [Route("course-analytics")]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _repository.GetCategories();

@@ -47,7 +47,7 @@ namespace InterviewPuzzle.Controllers
         [HttpGet("bycourse")]
         public async Task<IActionResult> GetMcqsByCourse([FromQuery] string course)
         {
-            var mcqs = await _mcqRepository.GetMcqByCourseAsync(course);
+            var mcqs = await _mcqRepository.GetMcqByCourseAsync(course.ToLower());
             if (mcqs == null || mcqs.Count == 0)
                 throw new NotFoundException($"MCQ with course '{course}' not found");
             return Ok(mcqs);

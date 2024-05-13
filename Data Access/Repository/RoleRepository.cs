@@ -14,6 +14,17 @@ namespace InterviewPuzzle.Data_Access.Repository
             _userManager = userManager;
         }
 
+        public async Task<IEnumerable<string>> GetUserRolesAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if(user == null)
+            {
+                return Enumerable.Empty<string>();
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles;
+        }
+
         public async Task<IdentityResult> CreateRoleAsync(string role)
         {
             var result = await _roleManager.CreateAsync(new IdentityRole(role));

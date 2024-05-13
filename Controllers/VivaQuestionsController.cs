@@ -47,7 +47,7 @@ namespace InterviewPuzzle.Controllers
         [HttpGet("bycourse")]
         public async Task<IActionResult> GetQuestionsByCourse([FromQuery] string course)
         {
-            var questions = await _questionRepository.GetQuestionByCourseAsync(course);
+            var questions = await _questionRepository.GetQuestionByCourseAsync(course.ToLower());
             if (questions == null || questions.Count == 0)
             {
                 throw new NotFoundException($"Viva questions with course '{course}' not found");
