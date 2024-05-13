@@ -15,13 +15,13 @@ Before you begin, make sure you have the following installed:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/wajil/InterviewPuzzle-API.git
+    git clone https://github.com/wajiul/InterviewPuzzle.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd InterviewPuzzle-API
+    cd InterviewPuzzle
     ```
 
 ### Running the API
