@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using InterviewPuzzle.Controllers.DTO;
 using InterviewPuzzle.Data_Access.Model;
 using InterviewPuzzle.Exceptions;
+using System.Net;
 
 namespace InterviewPuzzle.Controllers.Admin
 {
@@ -24,65 +25,184 @@ namespace InterviewPuzzle.Controllers.Admin
             _mapper = mapper;
             _uow = uow;
         }
+        /// <summary>
+        /// Adds a new MCQ.
+        /// </summary>
+        /// <param name="mcqDto">The DTO containing the MCQ data.</param>
+        /// <returns>A response indicating the result of the add operation.</returns>
+        /// <response code="200">Returns a success message if the MCQ was added successfully.</response>
+        /// <response code="400">Returns an error message if the MCQ already exists.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Add([FromBody] McqDto mcqDto)
         {
             if (await _mcqRepository.IsMcqExist(mcqDto.Coursename, mcqDto.Question))
-                throw new AlreadyExistException("MCQ already exist");
+            {
+                return BadRequest(new APIResponse<string>
+                {
+                    IsSuccess = false,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    ErrorMessages = new List<string> { "MCQ already exists" }
+                });
+            }
 
             var mcq = _mapper.Map<McqDto, MCQ>(mcqDto);
-
             _mcqRepository.AddMCQ(mcq);
-
             await _uow.Complete();
-            return Ok("MCQ added successfully");
+
+            return Ok(new APIResponse<string>
+            {
+                IsSuccess = true,
+                StatusCode = HttpStatusCode.OK,
+                Result = "MCQ added successfully"
+            });
         }
 
+        /// <summary>
+        /// Adds a list of MCQs in bulk.
+        /// </summary>
+        /// <param name="mcqDtoList">The list of DTOs containing the MCQ data.</param>
+        /// <returns>A response indicating the result of the bulk add operation.</returns>
+        /// <response code="200">Returns a success message if the MCQs were added successfully, including any failures.</response>
         [HttpPost("bulk")]
+        [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> AddMcqList([FromBody] List<McqDto> mcqDtoList)
         {
-            int failedtoAdd = 0;
+            int failedToAdd = 0;
 
             foreach (var mcqDto in mcqDtoList)
             {
                 if (await _mcqRepository.IsMcqExist(mcqDto.Coursename, mcqDto.Question))
                 {
-                    failedtoAdd++;
+                    failedToAdd++;
                     continue;
                 }
 
                 var mcq = _mapper.Map<McqDto, MCQ>(mcqDto);
-
                 _mcqRepository.AddMCQ(mcq);
             }
-            await _uow.Complete();
-            if (failedtoAdd > 0)
-                return Ok($"{failedtoAdd} MCQ already exist and not added to the database");
 
-            return Ok("All MCQ added successfully");
+            await _uow.Complete();
+
+            if (failedToAdd > 0)
+            {
+                return Ok(new APIResponse<string>
+                {
+                    IsSuccess = true,
+                    StatusCode = HttpStatusCode.OK,
+                    Result = $"{failedToAdd} MCQs already exist and were not added to the database"
+                });
+            }
+
+            return Ok(new APIResponse<string>
+            {
+                IsSuccess = true,
+                StatusCode = HttpStatusCode.OK,
+                Result = "All MCQs added successfully"
+            });
         }
+        /// <summary>
+        /// Updates an existing MCQ.
+        /// </summary>
+        /// <param name="id">The ID of the MCQ to update.</param>
+        /// <param name="mcqDto">The updated MCQ data.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
+        /// <response code="200">Returns a success message if the MCQ was updated successfully.</response>
+        /// <response code="404">Returns an error message if mcq with ID does not exist.</response>
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] MCQ mcq)
+        [ProducesResponseType(typeof(APIResponse<string>), 200)]
+        public async Task<IActionResult> Update(int id, [FromBody] McqDto mcqDto)
         {
-            _mcqRepository.UpdateMcq(mcq);
+            var mcq =await _mcqRepository.GetMcqAsync(id);
+            if (mcq == null)
+            {
+                return NotFound(new APIResponse<string>
+                {
+                    IsSuccess = false,
+                    StatusCode= HttpStatusCode.NotFound,
+                    ErrorMessages = new List<string> { $"MCQ with ID {id} not found."}
+                });
+            }
+
+            var updatedMcq = _mapper.Map<McqDto, MCQ>(mcqDto, mcq);
+
+            _mcqRepository.UpdateMcq(updatedMcq);
             await _uow.Complete();
-            return Ok("Data updated successfully");
-        }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _mcqRepository.DeleteMcq(id);
-            await _uow.Complete();
-            return Ok("Deleted successfully.");
+            return Ok(new APIResponse<string>
+            {
+                IsSuccess = true,
+                StatusCode = HttpStatusCode.OK,
+                Result = "Updated successfully"
+            });
         }
 
+        /// <summary>
+        /// Deletes an existing MCQ by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the MCQ to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
+        /// <response code="200">Returns a success message if the MCQ was deleted successfully.</response>
+        /// <response code="404">Returns an error message if the MCQ does not exist.</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(APIResponse<string>), 200)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var mcq = await _mcqRepository.GetMcqAsync(id);
+            if (mcq == null)
+            {
+                return NotFound(new APIResponse<string>
+                {
+                    IsSuccess = false,
+                    StatusCode = HttpStatusCode.NotFound,
+                    ErrorMessages = new List<string> { $"MCQ with ID {id} not found." }
+                });
+            }
+
+            await _mcqRepository.DeleteMcq(id);
+            await _uow.Complete();
+
+            return Ok(new APIResponse<string>
+            {
+                IsSuccess = true,
+                StatusCode = HttpStatusCode.OK,
+                Result = "Deleted successfully."
+            });
+        }
+
+
+        /// <summary>
+        /// Deletes an option from an existing MCQ by the option's ID.
+        /// </summary>
+        /// <param name="mcqId">The ID of the MCQ.</param>
+        /// <param name="optionId">The ID of the option to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
+        /// <response code="200">Returns a success message if the option was deleted successfully.</response>
+        /// <response code="404">Returns an error message if the MCQ.</response>
+        
         [HttpDelete("mcq/{mcqId}/option/{optionId}")]
+        [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> DeleteOption(int mcqId, int optionId)
         {
+            var mcq = await _mcqRepository.GetMcqAsync(mcqId);
+            if (mcq == null)
+            {
+                return NotFound(new APIResponse<string>
+                {
+                    IsSuccess = false,
+                    StatusCode = HttpStatusCode.NotFound,
+                    ErrorMessages = new List<string> { $"MCQ with ID {mcqId} not found." }
+                });
+            }
             await _mcqRepository.DeleteMcqOption(mcqId, optionId);
             await _uow.Complete();
-            return Ok($"Option {optionId} Removed from Mcq {mcqId}");
+
+            return Ok(new APIResponse<string>
+            {
+                IsSuccess = true,
+                StatusCode = HttpStatusCode.OK,
+                Result = $"Option {optionId} removed from MCQ {mcqId}."
+            });
         }
 
     }

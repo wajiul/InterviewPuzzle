@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using InterviewPuzzle.Data_Access.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace InterviewPuzzle.Controllers
 {
@@ -7,7 +9,12 @@ namespace InterviewPuzzle.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
+        /// <summary>
+        /// Returns a List of courses for MCQ
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("mcq-courses")]
+        [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string,string>>>),200)]
         public IActionResult GetMCQCourses()
         {
             var list = new List<string>()
@@ -21,10 +28,17 @@ namespace InterviewPuzzle.Controllers
                 "Networking"
             };
 
-            return Ok(ConvertToPair(list));
+            var response = new APIResponse<List<KeyValuePair<string, string>>>(true, HttpStatusCode.OK, ConvertToPair(list));
+
+            return Ok(response);
         }
 
+        /// <summary>
+        /// Returns a List of courses for interview
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("interview-courses")]
+        [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetVivaCourses()
         {
             var list = new List<string>()
@@ -38,10 +52,17 @@ namespace InterviewPuzzle.Controllers
                 "Networking"
             };
 
-            return Ok(ConvertToPair(list));
+            var response = new APIResponse<List<KeyValuePair<string, string>>>(true, HttpStatusCode.OK, ConvertToPair(list));
+
+            return Ok(response);
         }
 
+        /// <summary>
+        /// Returns a list of tags for coding problems
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("coding-tags")]
+        [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetCodingTags()
         {
             var list = new List<string>()
@@ -68,10 +89,17 @@ namespace InterviewPuzzle.Controllers
                 "Math"
             };
 
-            return Ok(ConvertToPair(list));
+            var response = new APIResponse<List<KeyValuePair<string, string>>>(true, HttpStatusCode.OK, ConvertToPair(list));
+
+            return Ok(response);
         }
 
+        /// <summary>
+        /// Returns a list of coding languages
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("coding-languages")]
+        [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetCodingLanguages()
         {
             var list = new List<string>()
@@ -87,7 +115,9 @@ namespace InterviewPuzzle.Controllers
                 "Ruby",
                 "Swift"
             };
-            return Ok(list);
+            var response = new APIResponse<List<KeyValuePair<string, string>>>(true, HttpStatusCode.OK, ConvertToPair(list));
+
+            return Ok(response);
         }
         private List<KeyValuePair<string,string>> ConvertToPair(List<string> list)
         {

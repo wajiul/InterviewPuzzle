@@ -10,7 +10,7 @@ namespace InterviewPuzzle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class RoleManagementController : ControllerBase
     {
         private readonly RoleRepository _roleRepository;

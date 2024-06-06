@@ -28,6 +28,7 @@ namespace InterviewPuzzle.Controllers
             _mapper = mapper;
             _uow = uow;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
