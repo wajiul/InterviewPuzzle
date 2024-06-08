@@ -38,20 +38,21 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "InterviewPuzzle API",
-        Description = "A ASP.NET Core Web API for ---",
+        Version = "v1",
+        Description = "A comprehensive ASP.NET Core Web API for managing interview questions related to Data structures, Algorithms, Database and Operating system.",
         Contact = new OpenApiContact
         {
             Name = "Owajeul Islam",
             Email = "owajeul01357@gmail.com",
-            Url = new Uri("https://linkedin.com/wajiul"),
+            Url = new Uri("https://www.linkedin.com/in/wajiul/"),
         },
         License = new OpenApiLicense
         {
             Name = "MIT License",
-            Url = new Uri("https://opensource.org/license/MIT"),
-        },
-        Version = "v1"
+            Url = new Uri("https://opensource.org/licenses/MIT"),
+        }
     });
+
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

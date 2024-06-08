@@ -19,10 +19,11 @@ namespace InterviewPuzzle.Data_Access.Repository
             _context.mcqs.Add(mcq);
         }
 
-        public async Task<List<MCQ>> GetAllMcqAsync()
+        public async Task<IEnumerable<MCQ>> GetAllMcqAsync()
         {
             return await _context.mcqs.Include(m => m.Options).ToListAsync();
         }
+
         public async Task<MCQ> GetMcqAsync(int id)
         {
             return await _context.mcqs.Include(m => m.Options).FirstOrDefaultAsync(m => m.Id == id);

@@ -14,7 +14,7 @@ namespace InterviewPuzzle.Data_Access.Repository
             _context = context;
         }
 
-        public async Task<List<VivaQuestion>> GetVivaQuestionsAsync()
+        public async Task<IEnumerable<VivaQuestion>> GetVivaQuestionsAsync()
         {
             return await _context.vivaQuestions.ToListAsync();
         }
@@ -23,14 +23,14 @@ namespace InterviewPuzzle.Data_Access.Repository
             var question = await _context.vivaQuestions.FirstOrDefaultAsync(x => x.Id == id);
             return question;
         }
-        public async Task<List<VivaQuestion>> GetQuestionByCourseAsync(string course)
+        public async Task<IEnumerable<VivaQuestion>> GetQuestionByCourseAsync(string course)
         {
             return await _context.vivaQuestions.Where(q => q.CourseName.ToLower() ==  course.ToLower()).ToListAsync();
         }
 
-        public void AddVavaQuestion(VivaQuestion question)
+        public async Task AddVivaQuestionAsync(VivaQuestion question)
         {
-            _context.vivaQuestions.Add(question);
+            await _context.vivaQuestions.AddAsync(question);
         }
         public void UpdateVivaQuestion(VivaQuestion question)
         {

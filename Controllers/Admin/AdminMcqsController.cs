@@ -84,23 +84,16 @@ namespace InterviewPuzzle.Controllers.Admin
 
             await _uow.Complete();
 
-            if (failedToAdd > 0)
-            {
-                return Ok(new APIResponse<string>
-                {
-                    IsSuccess = true,
-                    StatusCode = HttpStatusCode.OK,
-                    Result = $"{failedToAdd} MCQs already exist and were not added to the database"
-                });
-            }
-
             return Ok(new APIResponse<string>
             {
                 IsSuccess = true,
                 StatusCode = HttpStatusCode.OK,
-                Result = "All MCQs added successfully"
+                Result = failedToAdd > 0 
+                        ? $"{failedToAdd} MCQs already exist and were not added to the database"
+                        : "All MCQs added successfully"
             });
         }
+
         /// <summary>
         /// Updates an existing MCQ.
         /// </summary>

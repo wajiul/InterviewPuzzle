@@ -14,7 +14,7 @@ namespace InterviewPuzzle.Data_Access.Repository
             _context = context;
         }
 
-        public async Task<List<CodingQuestion>> GetCodingQuestionsAsync()
+        public async Task<IEnumerable<CodingQuestion>> GetCodingQuestionsAsync()
         {
             return await _context.codingQuestions.Include(c => c.Solutions).ToListAsync();
         }
@@ -22,7 +22,7 @@ namespace InterviewPuzzle.Data_Access.Repository
         {
             return await _context.codingQuestions.Include(q => q.Solutions).FirstOrDefaultAsync(q => q.Id == id);
         }
-        public async Task<List<CodingQuestion>> GetCodingQuestionsByTagAsync(string tag)
+        public async Task<IEnumerable<CodingQuestion>> GetCodingQuestionsByTagAsync(string tag)
         {
             return await _context.codingQuestions.Include(q => q.Solutions).Where(q => q.Tag.ToLower() == tag.ToLower()).ToListAsync();
         }

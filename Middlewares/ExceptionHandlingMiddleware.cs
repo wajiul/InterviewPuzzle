@@ -1,7 +1,10 @@
-﻿using InterviewPuzzle.Exceptions;
+﻿using InterviewPuzzle.Data_Access.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using System.Text.Json;
+using Serilog;
 
 namespace InterviewPuzzle.Middlewares
 {
@@ -20,52 +23,44 @@ namespace InterviewPuzzle.Middlewares
             {
                 await next(context);
             }
-
-            catch (NotFoundException ex)
-            {
-                await ResponseToExceptionAsync(context, StatusCodes.Status404NotFound, "Not Found", ex.Message);
-            }
-            catch (AlreadyExistException ex)
-            {
-                await ResponseToExceptionAsync(context,StatusCodes.Status400BadRequest, "Bad Request", ex.Message);
-            }
             catch (DbUpdateException dbUpdateException)
             {
                 if (dbUpdateException.InnerException is SqlException sqlException)
                 {
-                    await ResponseToExceptionAsync(context, StatusCodes.Status409Conflict, "Conflict", sqlException.Message);
+                    _logger.LogError(sqlException, "Database update exception: {Message}", sqlException.Message);
+                    await HandleExceptionAsync(context, HttpStatusCode.Conflict, sqlException.Message);
                 }
                 else
                 {
-                    await ResponseToExceptionAsync(context, StatusCodes.Status400BadRequest, "Bad Request", dbUpdateException.Message);
+                    _logger.LogError(dbUpdateException, "Database update exception: {Message}", dbUpdateException.Message);
+                    await HandleExceptionAsync(context, HttpStatusCode.BadRequest, dbUpdateException.Message);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occured.");
-                await ResponseToExceptionAsync(context, StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occured");
+                _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
         }
 
-
-        private static async Task ResponseToExceptionAsync(HttpContext context, int statusCode, string title, string message)
+        private static async Task HandleExceptionAsync(HttpContext context, HttpStatusCode statusCode, string message)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = statusCode;
-            var response = new
+            context.Response.StatusCode = (int)statusCode;
+
+            var response = new APIResponse<string>
             {
-                title = title,
-                status = statusCode,
-                message = message
+                IsSuccess = false,
+                StatusCode = statusCode,
+                ErrorMessages = new List<string> { message }
             };
 
             var jsonResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
             await context.Response.WriteAsync(jsonResponse);
         }
-
     }
 }

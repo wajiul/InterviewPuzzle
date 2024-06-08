@@ -10,9 +10,10 @@ namespace InterviewPuzzle.Controllers
     public class CategoriesController : ControllerBase
     {
         /// <summary>
-        /// Returns a List of courses for MCQ
+        /// Gets a list of courses for MCQ.
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Returns the list of courses for MCQ.</response>
+
         [HttpGet("mcq-courses")]
         [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string,string>>>),200)]
         public IActionResult GetMCQCourses()
@@ -34,9 +35,9 @@ namespace InterviewPuzzle.Controllers
         }
 
         /// <summary>
-        /// Returns a List of courses for interview
+        /// Gets a List of courses for interview
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Returns the list of courses in key-value pair format for MCQ.</response>
         [HttpGet("interview-courses")]
         [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetVivaCourses()
@@ -58,9 +59,10 @@ namespace InterviewPuzzle.Controllers
         }
 
         /// <summary>
-        /// Returns a list of tags for coding problems
+        /// Gets a list of tags for coding problems
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Returns the list of tags in key-value pair format for coding problems.</response>
+
         [HttpGet("coding-tags")]
         [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetCodingTags()
@@ -97,7 +99,7 @@ namespace InterviewPuzzle.Controllers
         /// <summary>
         /// Returns a list of coding languages
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Returns the list of programming langulages in key-value pair format.</response>
         [HttpGet("coding-languages")]
         [ProducesResponseType(typeof(APIResponse<List<KeyValuePair<string, string>>>), 200)]
         public IActionResult GetCodingLanguages()

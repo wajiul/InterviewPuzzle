@@ -65,7 +65,7 @@ namespace InterviewPuzzle.Data_Access.Repository
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<IdentityResult> CreatUserAsync(Register register)
+        public async Task<IdentityResult> CreateUserAsync(Register register)
         {
             var existingEmail = await _userManager.FindByEmailAsync(register.Email); 
 
