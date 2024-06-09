@@ -21,7 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
- 
+
+builder.Host.UseSerilog();
+
+//builder.Services.AddLogging(option => option.AddSerilog(dispose:true));
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidateModelAttribute>();
@@ -49,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
         License = new OpenApiLicense
         {
             Name = "MIT License",
-            Url = new Uri("https://opensource.org/licenses/MIT"),
+            Url = new Uri("https://github.com/wajiul/InterviewPuzzle/blob/master/LICENSE.txt"),
         }
     });
 
@@ -163,6 +167,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors();

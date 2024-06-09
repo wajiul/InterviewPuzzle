@@ -13,9 +13,11 @@ namespace InterviewPuzzle.Controllers.Admin
     /// <summary>
     /// Controller for managing Viva Questions.
     /// </summary>
+    
+    
     [Route("api/admin/interviews")]
     [ApiController]
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class AdminVivaQuestionsController : ControllerBase
     {
         private readonly VivaQuestionRepository _questionRepository;
@@ -36,6 +38,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the add operation.</returns>
         /// <response code="200">Returns the created question.</response>
         /// <response code="400">Returns error message if the question already exists.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost]
         [ProducesResponseType(typeof(APIResponse<VivaQuestion>), 200)]
         [ProducesResponseType(typeof(APIResponse<string>), 400)]
@@ -74,6 +79,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <param name="questionList">The list of Viva question DTOs to add.</param>
         /// <returns>A response indicating the result of the bulk add operation.</returns>
         /// <response code="200">Returns a success message indicating the result of the operation.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost("bulk")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> AddQuestionList([FromBody] List<VivaQuestionDto> questionList)
@@ -113,6 +121,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the update operation.</returns>
         /// <response code="200">Returns a success message of Viva question added successfully.</response>
         /// <response code="404">Returns a error message of Viva question with ID does not exist.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Update(int id, [FromBody] VivaQuestionDto questionDto)
@@ -151,7 +162,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// <response code="200">Returns a success message of Viva question added successfully.</response>
         /// <response code="404">Returns a error message of Viva question with ID does not exist.</response>
-
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
 

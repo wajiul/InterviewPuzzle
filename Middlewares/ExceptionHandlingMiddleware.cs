@@ -27,18 +27,18 @@ namespace InterviewPuzzle.Middlewares
             {
                 if (dbUpdateException.InnerException is SqlException sqlException)
                 {
-                    _logger.LogError(sqlException, "Database update exception: {Message}", sqlException.Message);
+                    Log.Error(sqlException, "Database update exception: {Message}", sqlException.Message);
                     await HandleExceptionAsync(context, HttpStatusCode.Conflict, sqlException.Message);
                 }
                 else
                 {
-                    _logger.LogError(dbUpdateException, "Database update exception: {Message}", dbUpdateException.Message);
+                    Log.Error(dbUpdateException, "Database update exception: {Message}", dbUpdateException.Message);
                     await HandleExceptionAsync(context, HttpStatusCode.BadRequest, dbUpdateException.Message);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
+                Log.Error(ex, "An unhandled exception occurred: {Message}", ex.Message);
                 await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, "An unexpected error occurred.");
             }
         }

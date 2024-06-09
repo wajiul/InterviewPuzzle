@@ -14,7 +14,7 @@ namespace InterviewPuzzle.Controllers.Admin
 {
     [Route("api/admin/coding")]
     [ApiController]
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     [ValidateModel]
     public class AdminCodingQuestionsController : ControllerBase
     {
@@ -34,6 +34,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <param name="questionDto">The DTO containing the coding question details.</param>
         /// <returns>The created coding problem's details.</returns>
         /// <exception cref="AlreadyExistException">T</exception>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost]
         [ProducesResponseType(typeof(APIResponse<string>),200)]
         public async Task<IActionResult> Add([FromBody] CodingQuestionDto questionDto)
@@ -65,6 +68,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the update operation.</returns>
         /// <response code="200">Returns a success message if the update was successful.</response>
         /// <response code="404">Returns an error message if the coding question was not found.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         [ValidateModel]
@@ -103,7 +109,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// <response code="200">Returns a success message if the coding question was deleted successfully.</response>
         /// <response code="404">Returns an error message if the coding question was not found.</response>
-        
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Delete(int id)
@@ -137,6 +145,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// <response code="200">Returns a success message if the solution was deleted successfully.</response>
         /// <response code="404">Returns an error message if the coding question or solution was not found.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpDelete("codingQuestions/{questionId}/solution/{solutionId}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> DeleteOption(int questionId, int solutionId)

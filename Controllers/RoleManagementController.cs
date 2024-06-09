@@ -16,7 +16,7 @@ namespace InterviewPuzzle.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public class RoleManagementController : ControllerBase
     {
         private readonly RoleRepository _roleRepository;
@@ -35,6 +35,9 @@ namespace InterviewPuzzle.Controllers
         /// <returns>A list of roles assigned to the user.</returns>
         /// <response code="200">Returns the list of roles assigned to the user.</response>
         /// <response code="404">If the user is not found.</response>
+        /// <remarks>
+        /// This endpoint requires authentication.
+        /// </remarks>
         [HttpGet("{username}/roles")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<string>>), 200)]
         public async Task<IActionResult> GetUserRoles(string username)
@@ -65,7 +68,11 @@ namespace InterviewPuzzle.Controllers
         /// <returns>The result of the role creation.</returns>
         /// <response code="201">Returns the created role.</response>
         /// <response code="400">If the role creation fails.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost("create-role/{name}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(APIResponse<string>), 201)]
         public async Task<IActionResult> CreateRole(string name)
         {
@@ -96,9 +103,12 @@ namespace InterviewPuzzle.Controllers
         /// <returns>The result of the role assignment.</returns>
         /// <response code="200">Returns the result of the role assignment.</response>
         /// <response code="400">If the role assignment fails.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost("assign/{username}/to/{role}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
-        [ProducesResponseType(typeof(APIResponse<string>), 400)]
         public async Task<IActionResult> AssignRole(string username, string role)
         {
             var result = await _roleRepository.AssignRoleAsync(username, role);

@@ -32,6 +32,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the add operation.</returns>
         /// <response code="200">Returns a success message if the MCQ was added successfully.</response>
         /// <response code="400">Returns an error message if the MCQ already exists.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Add([FromBody] McqDto mcqDto)
@@ -64,6 +67,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <param name="mcqDtoList">The list of DTOs containing the MCQ data.</param>
         /// <returns>A response indicating the result of the bulk add operation.</returns>
         /// <response code="200">Returns a success message if the MCQs were added successfully, including any failures.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPost("bulk")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> AddMcqList([FromBody] List<McqDto> mcqDtoList)
@@ -102,7 +108,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the update operation.</returns>
         /// <response code="200">Returns a success message if the MCQ was updated successfully.</response>
         /// <response code="404">Returns an error message if mcq with ID does not exist.</response>
-
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Update(int id, [FromBody] McqDto mcqDto)
@@ -137,6 +145,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// <response code="200">Returns a success message if the MCQ was deleted successfully.</response>
         /// <response code="404">Returns an error message if the MCQ does not exist.</response>
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> Delete(int id)
@@ -172,7 +183,9 @@ namespace InterviewPuzzle.Controllers.Admin
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// <response code="200">Returns a success message if the option was deleted successfully.</response>
         /// <response code="404">Returns an error message if the MCQ.</response>
-        
+        /// <remarks>
+        /// This endpoint requires authentication with the admin role.
+        /// </remarks>
         [HttpDelete("mcq/{mcqId}/option/{optionId}")]
         [ProducesResponseType(typeof(APIResponse<string>), 200)]
         public async Task<IActionResult> DeleteOption(int mcqId, int optionId)

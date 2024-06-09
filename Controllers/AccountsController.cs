@@ -3,6 +3,7 @@ using InterviewPuzzle.Data_Access.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Net;
 
 namespace InterviewPuzzle.Controllers
@@ -15,10 +16,11 @@ namespace InterviewPuzzle.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AccountRepository _accountRepository;
-
-        public AccountsController(AccountRepository accountRepository)
+        private readonly ILogger<AccountsController> _logger;
+        public AccountsController(AccountRepository accountRepository, ILogger<AccountsController> logger)
         {
             _accountRepository = accountRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -36,6 +38,8 @@ namespace InterviewPuzzle.Controllers
 
             if (token == null)
             {
+                Log.Error($"Failed to login for username: {login.Username}");
+
                 return Unauthorized(new APIResponse<string>
                 {
                     IsSuccess = false,
@@ -67,6 +71,8 @@ namespace InterviewPuzzle.Controllers
 
             if (!result.Succeeded)
             {
+                Log.Warning("Failed registration attempt for email: {Email}", register.Email);
+
                 return BadRequest( new APIResponse<string>
                 {
                     IsSuccess = false,
