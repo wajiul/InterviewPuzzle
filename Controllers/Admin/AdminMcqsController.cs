@@ -8,11 +8,14 @@ using InterviewPuzzle.Controllers.DTO;
 using InterviewPuzzle.Data_Access.Model;
 using InterviewPuzzle.Exceptions;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers.Admin
 {
     [Route("api/admin/mcqs")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Authorize(Roles = "admin")]
     public class AdminMcqsController : ControllerBase
     {

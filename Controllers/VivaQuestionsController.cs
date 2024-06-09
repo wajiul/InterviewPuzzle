@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using InterviewPuzzle.Controllers.DTO;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers
 {
@@ -17,6 +18,8 @@ namespace InterviewPuzzle.Controllers
     /// </summary>
     [Route("api/interviews")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class VivaQuestionsController : ControllerBase
     {
         private readonly VivaQuestionRepository _questionRepository;

@@ -7,11 +7,14 @@ using InterviewPuzzle.Data_Access.Repository;
 using InterviewPuzzle.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class McqsController : ControllerBase
     {
         private readonly McqRepository _mcqRepository;

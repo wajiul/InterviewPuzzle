@@ -9,11 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers.Admin
 {
     [Route("api/admin/coding")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Authorize(Roles = "admin")]
     [ValidateModel]
     public class AdminCodingQuestionsController : ControllerBase

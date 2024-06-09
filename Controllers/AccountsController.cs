@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers
 {
@@ -13,6 +14,8 @@ namespace InterviewPuzzle.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class AccountsController : ControllerBase
     {
         private readonly AccountRepository _accountRepository;

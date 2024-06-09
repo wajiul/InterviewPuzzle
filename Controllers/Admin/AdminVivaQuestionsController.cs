@@ -7,6 +7,7 @@ using InterviewPuzzle.Controllers.DTO;
 using InterviewPuzzle.Data_Access.Model;
 using InterviewPuzzle.Exceptions;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers.Admin
 {
@@ -17,6 +18,8 @@ namespace InterviewPuzzle.Controllers.Admin
     
     [Route("api/admin/interviews")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Authorize(Roles = "admin")]
     public class AdminVivaQuestionsController : ControllerBase
     {

@@ -4,11 +4,14 @@ using InterviewPuzzle.Data_Access.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class HomeController : ControllerBase
     {
         private readonly InterviewRepository _repository;

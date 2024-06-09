@@ -32,12 +32,21 @@ To run the API locally, use the .NET Core CLI:
 dotnet run
 ```
 
+## Includes
+
+- **ASP.NET Core Web API**: Built for robust and scalable development.
+- **Entity Framework Core with SQL Server**: Ensures efficient data management.
+- **IdentityCore with JWT**: Provides secure authentication.
+- **Serilog**: Facilitates detailed logging.
+- **Swagger**: Offers interactive API documentation.
+- **Unit of Work Pattern**: Ensures efficient database transactions.
+- **Custom Middleware for Global Exception Handling**: Provides consistent and centralized error management.
 
 ## Documentation
-For detailed information on available endpoints and how to use them, please refer to the [Postman Documentation](https://documenter.getpostman.com/view/33928531/2sA3JNb1Dy).
 
-The Postman Documentation includes detailed descriptions of each endpoint, sample requests, and responses.
+For detailed information on available endpoints and how to use them, please refer to the [Documentation](https://wajiul.github.io/API-Documentation/).
 
 ## Contributing
+
 I welcome contributions to the InterviewPuzzle API! If you have suggestions for improvements or find any bugs, please feel free to open an issue or submit a pull request.
 

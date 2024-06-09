@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net.Mime;
 
 namespace InterviewPuzzle.Controllers
 {
@@ -19,6 +20,8 @@ namespace InterviewPuzzle.Controllers
     /// </summary>
     [Route("api/coding")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class CodingQuestionsController : ControllerBase
     {
         private readonly CodingQuestionRepository _questionRepository;

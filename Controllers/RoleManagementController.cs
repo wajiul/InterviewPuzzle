@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace InterviewPuzzle.Controllers
@@ -16,6 +17,8 @@ namespace InterviewPuzzle.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Authorize]
     public class RoleManagementController : ControllerBase
     {
